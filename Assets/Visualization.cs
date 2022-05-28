@@ -8,18 +8,8 @@ public class Visualization : MonoBehaviour
 {
     public GameObject left;
     public GameObject right;
-    public GameObject map;
-    public GameObject map1;
-    public GameObject map2;
-    public GameObject map3;
-    public GameObject map4;
-    public GameObject map5;
-    public GameObject map6;
-    public GameObject map7;
-    public GameObject map8;
     public GameObject rippleCube;
-    public GameObject leftMap;
-    public GameObject rightMap;
+    public Camera center;
     public GameObject ringModel;
     private bool rippleOn;
     private int activeRings;
@@ -32,23 +22,31 @@ public class Visualization : MonoBehaviour
     private Image leftImage;
     private Image rightImage;
 
+    private bool IsVisible(Camera c, GameObject target)
+    // has a margin of 1 so that if object is just outside of FOV ripples still happen
+    {
+        var planes = GeometryUtility.CalculateFrustumPlanes(c);
+        var point = target.transform.position;
+        foreach(var plane in planes)
+        {   
+            Debug.Log(plane.GetDistanceToPoint(point));
+            if(plane.GetDistanceToPoint(point) < -1)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         left = GameObject.Find("Left");
         right = GameObject.Find("Right");
-        map = GameObject.Find("Map");
-        map1 = GameObject.Find("Map1");
-        map2 = GameObject.Find("Map2");
-        map3 = GameObject.Find("Map3");
-        map4 = GameObject.Find("Map4");
-        map5 = GameObject.Find("Map5");
-        map6 = GameObject.Find("Map6");
-        map7 = GameObject.Find("Map7");
-        map8 = GameObject.Find("Map8");
         rippleCube = GameObject.Find("Cube");
+        center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
         ringModel = GameObject.Find("Ring");
-        rippleOn = true;
+        rippleOn = false;
         activeRings = 0;
 
         sound = 0;
@@ -62,58 +60,47 @@ public class Visualization : MonoBehaviour
         left.SetActive(false);
         right.SetActive(false);
         
-        map1.SetActive(false);
-        map2.SetActive(false);
-        map3.SetActive(false);
-        map4.SetActive(false);
-        map5.SetActive(false);
-        map6.SetActive(false);
-        map7.SetActive(false);
-        map8.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("cube pos: "  + rippleCube.transform.position);
+        Debug.Log("self pos: "  + center.transform.position);
+        Debug.Log("self forward: "  + center.transform.forward);
+        Debug.Log("cube - self: "  + (rippleCube.transform.position - center.transform.position));
+
         if (Input.GetKeyUp(KeyCode.Q))
         {
             sound = 1;
-            map = map1;
         }
         else if (Input.GetKeyUp(KeyCode.W))
         {
             sound = 2;
-            map = map2;
         }
         else if (Input.GetKeyUp(KeyCode.E))
         {
             sound = 3;
-            map = map3;
         }
         else if (Input.GetKeyUp(KeyCode.A))
         {
             sound = 4;
-            map = map4;
         }
         else if (Input.GetKeyUp(KeyCode.D))
         {
             sound = 5;
-            map = map5;
         }
         else if (Input.GetKeyUp(KeyCode.Z))
         {
             sound = 6;
-            map = map6;
         }
         else if (Input.GetKeyUp(KeyCode.X))
         {
             sound = 7;
-            map = map7;
         }
         else if (Input.GetKeyUp(KeyCode.C))
         {
             sound = 8;
-            map = map8;
         }
         
         if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -136,8 +123,6 @@ public class Visualization : MonoBehaviour
                 left.SetActive(true);
             }
             leftTimer = 30;
-            leftMap = map;
-            leftMap.SetActive(true);
         }
         else if (sound == 3 || sound == 5 || sound == 8)
         {
@@ -146,8 +131,6 @@ public class Visualization : MonoBehaviour
                 right.SetActive(true);
             }
             rightTimer = 30;
-            rightMap = map;
-            rightMap.SetActive(true);
         }
 
         Color allColor = new Color(0, 0, 0);
@@ -164,50 +147,36 @@ public class Visualization : MonoBehaviour
             allColor = new Color(1f, 1f, 0, 1);
         }
 
-        Color color = allColor;
-        color.a = leftTimer / 30f;
-        leftImage.color = color;
-        if (leftMap != null)
-        {
-            leftMap.GetComponent<Image>().color = color;
-        }
-
-        color = allColor;
-        color.a = rightTimer / 30f;
-        rightImage.color = color;
-        if (rightMap != null)
-        {
-            rightMap.GetComponent<Image>().color = color;
-        }
-
         leftTimer -= 1;
         rightTimer -= 1;
 
         if (leftTimer == 0)
         {
             left.SetActive(false);
-            leftMap = null;
         }
         if (rightTimer == 0)
         {
             right.SetActive(false);
-            rightMap = null;
         }
 
         sound = 0;
 
-        if (Input.GetKeyUp(KeyCode.V))
+        if (IsVisible(center,rippleCube))
         {
-            if (rippleOn)
+            Debug.Log("cube in FOV");
+            if (!rippleOn)
             {
-                StopRipple();
-            }
-            else
-            {
+                rippleOn = true;
                 DoRipple();
             }
             
+        } else
+        {
+            Debug.Log("cube not visible");
+            StopRipple();
+            rippleOn = false;
         }
+
         if (rippleOn)
         {
             UpdateRipple();
