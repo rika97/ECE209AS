@@ -48,7 +48,7 @@ public class Visualization : MonoBehaviour
         map8 = GameObject.Find("Map8");
         rippleCube = GameObject.Find("Cube");
         ringModel = GameObject.Find("Ring");
-        rippleOn = false;
+        rippleOn = true;
         activeRings = 0;
 
         sound = 0;
