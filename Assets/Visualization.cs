@@ -14,8 +14,9 @@ public class Visualization : MonoBehaviour
     private bool rippleOn;
     private int activeRings;
     private float rippleTime;
+    private float angleFromForward;
     private Queue<GameObject> rings = new Queue<GameObject>();
-    private int sound;
+    // private int sound;
     private int leftTimer;
     private int rightTimer;
     private int priority;
@@ -38,6 +39,15 @@ public class Visualization : MonoBehaviour
         return true;
     }
 
+    private float CalculateAngleFromForward(Camera c, GameObject target)
+    // calculate angle from forward and project down to xz plane
+    {
+        Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.up);
+        Vector3 to = c.transform.forward;
+        float projectedAngleFromForward = Vector3.SignedAngle(from,to,c.transform.up);
+        return projectedAngleFromForward;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,7 +59,7 @@ public class Visualization : MonoBehaviour
         rippleOn = false;
         activeRings = 0;
 
-        sound = 0;
+        // sound = 0;
         leftTimer = 0;
         rightTimer = 0;
         priority = 1;
@@ -68,41 +78,9 @@ public class Visualization : MonoBehaviour
         Debug.Log("cube pos: "  + rippleCube.transform.position);
         Debug.Log("self pos: "  + center.transform.position);
         Debug.Log("self forward: "  + center.transform.forward);
-        Debug.Log("cube - self: "  + (rippleCube.transform.position - center.transform.position));
+        Debug.Log("angle: "  + CalculateAngleFromForward(center, rippleCube));
+        angleFromForward = CalculateAngleFromForward(center, rippleCube);
 
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            sound = 1;
-        }
-        else if (Input.GetKeyUp(KeyCode.W))
-        {
-            sound = 2;
-        }
-        else if (Input.GetKeyUp(KeyCode.E))
-        {
-            sound = 3;
-        }
-        else if (Input.GetKeyUp(KeyCode.A))
-        {
-            sound = 4;
-        }
-        else if (Input.GetKeyUp(KeyCode.D))
-        {
-            sound = 5;
-        }
-        else if (Input.GetKeyUp(KeyCode.Z))
-        {
-            sound = 6;
-        }
-        else if (Input.GetKeyUp(KeyCode.X))
-        {
-            sound = 7;
-        }
-        else if (Input.GetKeyUp(KeyCode.C))
-        {
-            sound = 8;
-        }
-        
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
             priority = 1;
@@ -116,21 +94,23 @@ public class Visualization : MonoBehaviour
             priority = 3;
         }
 
-        if (sound == 1 || sound == 2 || sound == 4 || sound == 6 || sound == 7)
+
+        if (angleFromForward > 60 && angleFromForward < 180)
         {
-            if (sound == 4 || sound == 6 || sound == 7)
-            {
-                left.SetActive(true);
-            }
-            leftTimer = 30;
+            left.SetActive(true);
+            // leftTimer = 30;
+
+        } else {
+            left.SetActive(false);
         }
-        else if (sound == 3 || sound == 5 || sound == 8)
+        
+
+        if (angleFromForward < -60 && angleFromForward > -180)
         {
-            if (sound == 5 || sound == 8)
-            {
-                right.SetActive(true);
-            }
-            rightTimer = 30;
+            right.SetActive(true);
+            // rightTimer = 30;
+        } else {
+            right.SetActive(false);
         }
 
         Color allColor = new Color(0, 0, 0);
@@ -147,19 +127,17 @@ public class Visualization : MonoBehaviour
             allColor = new Color(1f, 1f, 0, 1);
         }
 
-        leftTimer -= 1;
-        rightTimer -= 1;
+        // leftTimer -= 1;
+        // rightTimer -= 1;
 
-        if (leftTimer == 0)
-        {
-            left.SetActive(false);
-        }
-        if (rightTimer == 0)
-        {
-            right.SetActive(false);
-        }
-
-        sound = 0;
+        // if (leftTimer == 0)
+        // {
+        //     left.SetActive(false);
+        // }
+        // if (rightTimer == 0)
+        // {
+        //     right.SetActive(false);
+        // }
 
         if (IsVisible(center,rippleCube))
         {
@@ -167,7 +145,7 @@ public class Visualization : MonoBehaviour
             if (!rippleOn)
             {
                 rippleOn = true;
-                DoRipple();
+                BeginRipple();
             }
             
         } else
@@ -184,7 +162,7 @@ public class Visualization : MonoBehaviour
         
     }
 
-    void DoRipple()
+    void BeginRipple()
     {
         rippleOn = true;
         GameObject newRing = Instantiate(ringModel);
