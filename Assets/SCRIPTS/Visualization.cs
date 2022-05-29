@@ -30,7 +30,7 @@ public class Visualization : MonoBehaviour
         var point = target.transform.position;
         foreach(var plane in planes)
         {   
-            Debug.Log(plane.GetDistanceToPoint(point));
+            //Debug.Log(plane.GetDistanceToPoint(point));
             if(plane.GetDistanceToPoint(point) < -1)
             {
                 return false;
@@ -75,10 +75,10 @@ public class Visualization : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("cube pos: "  + rippleCube.transform.position);
-        Debug.Log("self pos: "  + center.transform.position);
-        Debug.Log("self forward: "  + center.transform.forward);
-        Debug.Log("angle: "  + CalculateAngleFromForward(center, rippleCube));
+        //Debug.Log("cube pos: "  + rippleCube.transform.position);
+        //Debug.Log("self pos: "  + center.transform.position);
+        //Debug.Log("self forward: "  + center.transform.forward);
+        //Debug.Log("angle: "  + CalculateAngleFromForward(center, rippleCube));
         angleFromForward = CalculateAngleFromForward(center, rippleCube);
 
         if (Input.GetKeyUp(KeyCode.Alpha1))
@@ -141,7 +141,7 @@ public class Visualization : MonoBehaviour
 
         if (IsVisible(center,rippleCube))
         {
-            Debug.Log("cube in FOV");
+            //Debug.Log("cube in FOV");
             if (!rippleOn)
             {
                 rippleOn = true;
@@ -150,7 +150,7 @@ public class Visualization : MonoBehaviour
             
         } else
         {
-            Debug.Log("cube not visible");
+            //Debug.Log("cube not visible");
             StopRipple();
             rippleOn = false;
         }
