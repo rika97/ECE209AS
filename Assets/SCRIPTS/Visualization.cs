@@ -8,13 +8,18 @@ public class Visualization : MonoBehaviour
 {
     public GameObject left;
     public GameObject right;
+    public GameObject above;
+    public GameObject below;
     public GameObject rippleCube;
+    public GameObject square;
     public Camera center;
     public GameObject ringModel;
     private bool rippleOn;
     private int activeRings;
     private float rippleTime;
     private float angleFromForward;
+    private float angleFromUp;
+    private float halfFOV;
     private Queue<GameObject> rings = new Queue<GameObject>();
     // private int sound;
     private int leftTimer;
@@ -47,18 +52,30 @@ public class Visualization : MonoBehaviour
         float projectedAngleFromForward = Vector3.SignedAngle(from,to,c.transform.up);
         return projectedAngleFromForward;
     }
+    
+    private float CalculateAngleFromUp(Camera c, GameObject target)
+    // calculate angle from up and project forward to xy plane
+    {
+        Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.right);
+        Vector3 to = c.transform.up;
+        float projectedAngleFromUp = Vector3.SignedAngle(from,to,c.transform.right);
+        return projectedAngleFromUp;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
+        square = GameObject.Find("Square");
         left = GameObject.Find("Left");
         right = GameObject.Find("Right");
+        above = GameObject.Find("Above");
+        below = GameObject.Find("Below");
         rippleCube = GameObject.Find("Cube");
         center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
         ringModel = GameObject.Find("Ring");
         rippleOn = false;
         activeRings = 0;
-
+        halfFOV = 45;
         // sound = 0;
         leftTimer = 0;
         rightTimer = 0;
@@ -78,8 +95,9 @@ public class Visualization : MonoBehaviour
         //Debug.Log("cube pos: "  + rippleCube.transform.position);
         //Debug.Log("self pos: "  + center.transform.position);
         //Debug.Log("self forward: "  + center.transform.forward);
-        //Debug.Log("angle: "  + CalculateAngleFromForward(center, rippleCube));
         angleFromForward = CalculateAngleFromForward(center, rippleCube);
+        angleFromUp = CalculateAngleFromUp(center, rippleCube);
+        // Debug.Log("angle: "  + CalculateAngleFromUp(center, rippleCube));
 
         if (Input.GetKeyUp(KeyCode.Alpha1))
         {
@@ -94,8 +112,8 @@ public class Visualization : MonoBehaviour
             priority = 3;
         }
 
-
-        if (angleFromForward > 60 && angleFromForward < 180)
+        // object on left
+        if (angleFromForward > halfFOV && angleFromForward < 180)
         {
             left.SetActive(true);
             // leftTimer = 30;
@@ -104,13 +122,32 @@ public class Visualization : MonoBehaviour
             left.SetActive(false);
         }
         
-
-        if (angleFromForward < -60 && angleFromForward > -180)
+        // object on right
+        if (angleFromForward < -halfFOV && angleFromForward > -180)
         {
             right.SetActive(true);
             // rightTimer = 30;
         } else {
             right.SetActive(false);
+        }
+
+        // object above
+        if (angleFromUp > -90 + halfFOV && angleFromUp < 90)
+        {
+            above.SetActive(true);
+            // leftTimer = 30;
+
+        } else {
+            above.SetActive(false);
+        }
+        
+        // object below
+        if (angleFromUp < -90 - halfFOV || angleFromUp > 90 && angleFromUp < 180)
+        {
+            below.SetActive(true);
+            // rightTimer = 30;
+        } else {
+            below.SetActive(false);
         }
 
         Color allColor = new Color(0, 0, 0);
@@ -139,7 +176,8 @@ public class Visualization : MonoBehaviour
         //     right.SetActive(false);
         // }
 
-        if (IsVisible(center,rippleCube))
+        // if (IsVisible(center,rippleCube))
+        if (angleFromForward > -60 && angleFromForward < 60 && angleFromUp > -120 && angleFromUp < -60)
         {
             //Debug.Log("cube in FOV");
             if (!rippleOn)
@@ -153,6 +191,9 @@ public class Visualization : MonoBehaviour
             //Debug.Log("cube not visible");
             StopRipple();
             rippleOn = false;
+        
+
+
         }
 
         if (rippleOn)
