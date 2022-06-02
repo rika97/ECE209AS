@@ -216,7 +216,7 @@ public class Visualization : MonoBehaviour
 
                 // scale alpha w/distance
                 float dist = Vector3.Distance(canvas.transform.position, rippleCube.transform.position);
-                float newAlpha = dist/9f;
+                float newAlpha = 1f - dist/9f;
                 Debug.Log("distance: " + dist + "alpha: " + newAlpha);
                 Color newColor = squareImage.color;
                 newColor.a = newAlpha;
