@@ -15,12 +15,10 @@ public class Visualization : MonoBehaviour
     public GameObject square;
     public Camera center;
     public GameObject canvas;
-    public GameObject ringModel;
-    private int activeRings;
-    private float rippleTime;
     private float angleFromForward;
     private float angleFromUp;
     private Queue<GameObject> rings = new Queue<GameObject>();
+    private Queue<GameObject> spheres = new Queue<GameObject>();
     // private int sound;
     private int leftTimer;
     private int rightTimer;
@@ -169,8 +167,6 @@ public class Visualization : MonoBehaviour
         Debug.Log("bottomRight " + bottomRight);
         Debug.Log("topLeft " + topLeft);
         Debug.Log("topright " + topRight);
-        ringModel = GameObject.Find("Ring");
-        activeRings = 0;
         // sound = 0;
         leftTimer = 0;
         rightTimer = 0;
@@ -184,13 +180,11 @@ public class Visualization : MonoBehaviour
         right.SetActive(true);
         above.SetActive(true);
         below.SetActive(true);
-        BeginRipple();
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateRipple();
         angleFromForward = CalculateAngleFromForward(center, rippleCube);
         angleFromUp = CalculateAngleFromUp(center, rippleCube);
         if (angleFromForward > -60 && angleFromForward < 60 && angleFromUp > -120 && angleFromUp < -60)
@@ -218,46 +212,5 @@ public class Visualization : MonoBehaviour
                 square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+180);
             }
         }
-
-        
-    }
-
-    void BeginRipple()
-    {
-        GameObject newRing = Instantiate(ringModel);
-        rings.Enqueue(newRing);
-        rippleTime = Time.time;
-        activeRings = 1;
-    }
-
-    void UpdateRipple()
-    {
-        float t = Time.time;
-        if (t - rippleTime > 1)
-        {
-            GameObject newRing = Instantiate(ringModel);
-            rings.Enqueue(newRing);
-            rippleTime = t;
-            activeRings++;
-            if (activeRings > 5)
-            {
-                GameObject oldestRing = rings.Dequeue();
-                Destroy(oldestRing);
-            }
-        }
-
-        foreach (GameObject ring in rings)
-        {
-            ring.transform.localScale += (new Vector3(.02f, 0f, .02f));
-        }
-    }
-
-    void StopRipple()
-    {
-        foreach (GameObject ring in rings)
-        {
-            Destroy(ring);
-        }
-        rings.Clear();
     }
 }
