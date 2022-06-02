@@ -194,59 +194,41 @@ public class Visualization : MonoBehaviour
         right.SetActive(true);
         above.SetActive(true);
         below.SetActive(true);
-        
+        BeginRipple();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 intersection;
-        if (findPointerCanvasPosition(out intersection, canvas,  rippleCube)){
-            square.transform.localPosition = intersection;
-
-            // scale alpha w/distance
-            float dist = Vector3.Distance(canvas.transform.position, rippleCube.transform.position);
-            float newAlpha = dist/9f;
-            Debug.Log("distance: " + dist + "alpha: " + newAlpha);
-            Color newColor = squareImage.color;
-            newColor.a = newAlpha;
-            squareImage.color = newColor;
-
-            // point indicator in direction of sound
-            float intersectionAngle = findIntersectionAngle(intersection);
-            Debug.Log(intersectionAngle + 180);
-            square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+180);
-        }
-
+        UpdateRipple();
         angleFromForward = CalculateAngleFromForward(center, rippleCube);
         angleFromUp = CalculateAngleFromUp(center, rippleCube);
-        
-
-        // Debug.Log(angleFromForward + " " + screenWidth*(-angleFromForward/FOV) + " " + angleFromUp + " " +  screenHeight*(-(angleFromUp+90)/FOV));
-        // Debug.Log(square.transform.localPosition);
-
-        // ripple stuff
         if (angleFromForward > -60 && angleFromForward < 60 && angleFromUp > -120 && angleFromUp < -60)
         {
-            //Debug.Log("cube in FOV");
-            if (!rippleOn)
-            {
-                rippleOn = true;
-                BeginRipple();
-            }
-            
+            square.SetActive(false);
         } else
         {
-            //Debug.Log("cube not visible");
-            StopRipple();
-            rippleOn = false;
+            square.SetActive(true);
+            Vector3 intersection;
+            // update indicator
+            if (findPointerCanvasPosition(out intersection, canvas,  rippleCube)){
+                square.transform.localPosition = intersection;
 
+                // scale alpha w/distance
+                float dist = Vector3.Distance(canvas.transform.position, rippleCube.transform.position);
+                float newAlpha = dist/9f;
+                Debug.Log("distance: " + dist + "alpha: " + newAlpha);
+                Color newColor = squareImage.color;
+                newColor.a = newAlpha;
+                squareImage.color = newColor;
+
+                // point indicator in direction of sound
+                float intersectionAngle = findIntersectionAngle(intersection);
+                Debug.Log(intersectionAngle + 180);
+                square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+180);
+            }
         }
 
-        if (rippleOn)
-        {
-            UpdateRipple();
-        }
         
     }
 
