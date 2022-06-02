@@ -15,8 +15,8 @@ public class Visualization : MonoBehaviour
     public GameObject square;
     public Camera center;
     public GameObject canvas;
-    private float angleFromForward;
-    private float angleFromUp;
+    private float angleLeftRight;
+    private float angleUpDown;
     private Queue<GameObject> rings = new Queue<GameObject>();
     private Queue<GameObject> spheres = new Queue<GameObject>();
     // private int sound;
@@ -26,10 +26,10 @@ public class Visualization : MonoBehaviour
     private Image leftImage;
     private Image squareImage;
     private Image rightImage;
-    Vector3 bottomLeft = new Vector3(-.75f,-.54f,0f);
-    Vector3 bottomRight = new Vector3(.75f,-.54f,0f);
-    Vector3 topLeft = new Vector3(-.75f,.54f,0f);
-    Vector3 topRight = new Vector3(.75f,.54f,0f);
+    Vector3 bottomLeft = new Vector3(-.8f,-.7f,0f);
+    Vector3 bottomRight = new Vector3(.8f,-.7f,0f);
+    Vector3 topLeft = new Vector3(-.8f,.7f,0f);
+    Vector3 topRight = new Vector3(.8f,.7f,0f);
 
     public static bool LineLineIntersection(out Vector3 intersection, Vector3 linePoint1,
         Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2){
@@ -74,6 +74,8 @@ public class Visualization : MonoBehaviour
         intersection = Vector3.zero;
         return false;
     }
+
+    
     private bool findPointerCanvasPosition(out Vector3 intersection, GameObject c, GameObject target){
 
         // transform 3D positions onto normal plane
@@ -90,28 +92,40 @@ public class Visualization : MonoBehaviour
         Vector3 forward = new Vector3(0f,0f,1f);
         a2 = Vector3.ProjectOnPlane(c.transform.InverseTransformPoint(target.transform.position), forward);
         // // projected
-        // Debug.DrawLine(c.transform.position, c.transform.TransformPoint(a2));
+        Debug.DrawLine(c.transform.position, c.transform.TransformPoint(a2));
 
-        if (LineSegmentIntersection(out intersection, a1, a2, topRight, topLeft)){
-            // Debug.Log("top segment intersection " + intersection);
-            return true;
-        // bottom
-        } else if (LineSegmentIntersection(out intersection, a1, a2, bottomRight, bottomLeft)){
-            // Debug.Log("bottom segment intersection " + intersection);
-            return true;
-        // left
-        } else if (LineSegmentIntersection(out intersection, a1, a2, topLeft, bottomLeft)){
-            // Debug.Log("left segment intersection " + intersection);
-            return true;
-        // right
-        } else if (LineSegmentIntersection(out intersection, a1, a2, topRight, bottomRight)){
-            // Debug.Log("right intersection");
-            return true;
-        } 
-        // Debug.Log("NO intersection");
-        intersection = Vector3.zero;
-        return false;
+        float theta = Vector3.SignedAngle(new Vector3(1f,0f,0f),a2,forward);
+        theta = (theta * Mathf.PI)/180f;
+        float a = 0.8f;
+        float b  = 0.7f;
+        float x = a*Mathf.Cos(theta);
+        float y = b*Mathf.Sin(theta);
+        // Debug.Log("theta: " + theta);
+        // Debug.Log(x + ","  + y);
+
+        // if (LineSegmentIntersection(out intersection, a1, a2, topRight, topLeft)){
+        //     // Debug.Log("top segment intersection " + intersection);
+        //     return true;
+        // // bottom
+        // } else if (LineSegmentIntersection(out intersection, a1, a2, bottomRight, bottomLeft)){
+        //     // Debug.Log("bottom segment intersection " + intersection);
+        //     return true;
+        // // left
+        // } else if (LineSegmentIntersection(out intersection, a1, a2, topLeft, bottomLeft)){
+        //     // Debug.Log("left segment intersection " + intersection);
+        //     return true;
+        // // right
+        // } else if (LineSegmentIntersection(out intersection, a1, a2, topRight, bottomRight)){
+        //     // Debug.Log("right intersection");
+        //     return true;
+        // } 
+        // // Debug.Log("NO intersection");
+        intersection = new Vector3(x,y,0f);
+        return true;
     }
+
+
+
     private float findIntersectionAngle(Vector3 intersection){
         Vector3 up = new Vector3(0f,1f,0f);
         float intersectionAngle = Vector3.SignedAngle(up,intersection,new Vector3(0f,0f,1f));
@@ -144,10 +158,10 @@ public class Visualization : MonoBehaviour
     }
     
     private float CalculateAngleFromUp(Camera c, GameObject target)
-    // calculate angle from up and project forward to xy plane
+    // calculate angle from forward and project forward to xy plane
     {
         Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.right);
-        Vector3 to = c.transform.up;
+        Vector3 to = c.transform.forward;
         float projectedAngleFromUp = Vector3.SignedAngle(from,to,c.transform.right);
         return projectedAngleFromUp;
     }
@@ -176,18 +190,18 @@ public class Visualization : MonoBehaviour
         rightImage = right.GetComponent<Image>();
         squareImage = square.GetComponent<Image>();
 
-        left.SetActive(true);
-        right.SetActive(true);
-        above.SetActive(true);
-        below.SetActive(true);
+        left.SetActive(false);
+        right.SetActive(false);
+        above.SetActive(false);
+        below.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        angleFromForward = CalculateAngleFromForward(center, rippleCube);
-        angleFromUp = CalculateAngleFromUp(center, rippleCube);
-        if (angleFromForward > -60 && angleFromForward < 60 && angleFromUp > -120 && angleFromUp < -60)
+        angleLeftRight = CalculateAngleFromForward(center, rippleCube);
+        angleUpDown = CalculateAngleFromUp(center, rippleCube);
+        if (angleLeftRight > -60 && angleLeftRight < 60 && angleUpDown > -60 && angleUpDown < 60)
         {
             square.SetActive(false);
         } else
@@ -200,7 +214,8 @@ public class Visualization : MonoBehaviour
 
                 // scale alpha w/distance
                 float dist = Vector3.Distance(canvas.transform.position, rippleCube.transform.position);
-                float newAlpha = 1f - dist/9f;
+                float newAlpha = ((Mathf.Abs(angleLeftRight)/360) + Mathf.Abs(angleLeftRight)/360)*.9f;
+                Debug.Log("angleUpDown: " + angleUpDown);
                 Debug.Log("distance: " + dist + "alpha: " + newAlpha);
                 Color newColor = squareImage.color;
                 newColor.a = newAlpha;
@@ -209,7 +224,7 @@ public class Visualization : MonoBehaviour
                 // point indicator in direction of sound
                 float intersectionAngle = findIntersectionAngle(intersection);
                 Debug.Log(intersectionAngle + 180);
-                square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+180);
+                square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+90);
             }
         }
     }
