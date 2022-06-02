@@ -16,15 +16,10 @@ public class Visualization : MonoBehaviour
     public Camera center;
     public GameObject canvas;
     public GameObject ringModel;
-    private bool rippleOn;
     private int activeRings;
     private float rippleTime;
-    private float screenWidth;
-    private float screenHeight;
     private float angleFromForward;
     private float angleFromUp;
-    private float halfFOV;
-    private float FOV;
     private Queue<GameObject> rings = new Queue<GameObject>();
     // private int sound;
     private int leftTimer;
@@ -100,19 +95,19 @@ public class Visualization : MonoBehaviour
         // Debug.DrawLine(c.transform.position, c.transform.TransformPoint(a2));
 
         if (LineSegmentIntersection(out intersection, a1, a2, topRight, topLeft)){
-            Debug.Log("top segment intersection " + intersection);
+            // Debug.Log("top segment intersection " + intersection);
             return true;
         // bottom
         } else if (LineSegmentIntersection(out intersection, a1, a2, bottomRight, bottomLeft)){
-            Debug.Log("bottom segment intersection " + intersection);
+            // Debug.Log("bottom segment intersection " + intersection);
             return true;
         // left
         } else if (LineSegmentIntersection(out intersection, a1, a2, topLeft, bottomLeft)){
-            Debug.Log("left segment intersection " + intersection);
+            // Debug.Log("left segment intersection " + intersection);
             return true;
         // right
         } else if (LineSegmentIntersection(out intersection, a1, a2, topRight, bottomRight)){
-            Debug.Log("right intersection");
+            // Debug.Log("right intersection");
             return true;
         } 
         // Debug.Log("NO intersection");
@@ -175,12 +170,7 @@ public class Visualization : MonoBehaviour
         Debug.Log("topLeft " + topLeft);
         Debug.Log("topright " + topRight);
         ringModel = GameObject.Find("Ring");
-        rippleOn = false;
         activeRings = 0;
-        halfFOV = 45f;
-        FOV = 90f;
-        screenHeight = 1.08f;
-        screenWidth = 1.5f;
         // sound = 0;
         leftTimer = 0;
         rightTimer = 0;
@@ -234,7 +224,6 @@ public class Visualization : MonoBehaviour
 
     void BeginRipple()
     {
-        rippleOn = true;
         GameObject newRing = Instantiate(ringModel);
         rings.Enqueue(newRing);
         rippleTime = Time.time;
@@ -265,7 +254,6 @@ public class Visualization : MonoBehaviour
 
     void StopRipple()
     {
-        rippleOn = false;
         foreach (GameObject ring in rings)
         {
             Destroy(ring);
