@@ -11,78 +11,33 @@ public class Visualization : MonoBehaviour
     public GameObject above;
     public GameObject below;
 
-    public GameObject rippleCube;
-    public GameObject square;
+    public GameObject cube;
+    public GameObject cube2;
+    public RoomAudioController props;
+    private Dictionary<GameObject, bool> adict;
+    public Dictionary<GameObject, GameObject> propDict = new Dictionary<GameObject, GameObject>();
+    public List<GameObject> propsList;
+    public GameObject indicatorModel;
     public Camera center;
     public GameObject canvas;
     private float angleLeftRight;
     private float angleUpDown;
-    private Queue<GameObject> rings = new Queue<GameObject>();
-    private Queue<GameObject> spheres = new Queue<GameObject>();
+    // private Queue<GameObject> rings = new Queue<GameObject>();
     // private int sound;
-    private int leftTimer;
-    private int rightTimer;
+    // private int leftTimer;
+    // private int rightTimer;
     private int priority;
-    private Image leftImage;
-    private Image squareImage;
-    private Image rightImage;
+
     Vector3 bottomLeft = new Vector3(-.8f,-.7f,0f);
     Vector3 bottomRight = new Vector3(.8f,-.7f,0f);
     Vector3 topLeft = new Vector3(-.8f,.7f,0f);
     Vector3 topRight = new Vector3(.8f,.7f,0f);
-
-    public static bool LineLineIntersection(out Vector3 intersection, Vector3 linePoint1,
-        Vector3 lineVec1, Vector3 linePoint2, Vector3 lineVec2){
-        Vector3 lineVec3 = linePoint2 - linePoint1;
-        Vector3 crossVec1and2 = Vector3.Cross(lineVec1, lineVec2);
-        Vector3 crossVec3and2 = Vector3.Cross(lineVec3, lineVec2);
-
-        float planarFactor = Vector3.Dot(lineVec3, crossVec1and2);
-
-        //is coplanar, and not parallel
-        if( Mathf.Abs(planarFactor) < 0.0001f 
-                && crossVec1and2.sqrMagnitude > 0.0001f)
-        {
-            float s = Vector3.Dot(crossVec3and2, crossVec1and2) 
-                    / crossVec1and2.sqrMagnitude;
-            intersection = linePoint1 + (lineVec1 * s);
-            // Debug.Log("line intersection " + intersection);
-            return true;
-        }
-        else
-        {
-            intersection = Vector3.zero;
-            return false;
-        }
-    }
-    public static bool LineSegmentIntersection(out Vector3 intersection, Vector3 a1, Vector3 a2, Vector3 b1, Vector3 b2){
-        Vector3 from = a2 - a1;
-        Vector3 line = b2 - b1;
-        if (LineLineIntersection(out intersection, a1, from, b1, line)){
-            float aSqrMagnitude = from.sqrMagnitude;
-            float bSqrMagnitude = line.sqrMagnitude;
-
-            if (    (intersection - a1).sqrMagnitude <= aSqrMagnitude  
-                 && (intersection - a2).sqrMagnitude <= aSqrMagnitude  
-                 && (intersection - b1).sqrMagnitude <= bSqrMagnitude 
-                 && (intersection - b2).sqrMagnitude <= bSqrMagnitude)
-            {
-                // Debug.Log("segment intersection " + intersection);
-                return true;
-            } 
-        }
-        intersection = Vector3.zero;
-        return false;
-    }
-
     
     private bool findPointerCanvasPosition(out Vector3 intersection, GameObject c, GameObject target){
 
         // transform 3D positions onto normal plane
         Vector3 a1 = Vector3.zero;
-        // fix this local/world CoC issue!!!
         Vector3 a2 = target.transform.position;
-        // Vector3 a2 = Vector3.ProjectOnPlane(target.transform.position, c.transform.forward);
 
         // target
         Debug.DrawLine(c.transform.position, a2);
@@ -100,30 +55,9 @@ public class Visualization : MonoBehaviour
         float b  = 0.7f;
         float x = a*Mathf.Cos(theta);
         float y = b*Mathf.Sin(theta);
-        // Debug.Log("theta: " + theta);
-        // Debug.Log(x + ","  + y);
-
-        // if (LineSegmentIntersection(out intersection, a1, a2, topRight, topLeft)){
-        //     // Debug.Log("top segment intersection " + intersection);
-        //     return true;
-        // // bottom
-        // } else if (LineSegmentIntersection(out intersection, a1, a2, bottomRight, bottomLeft)){
-        //     // Debug.Log("bottom segment intersection " + intersection);
-        //     return true;
-        // // left
-        // } else if (LineSegmentIntersection(out intersection, a1, a2, topLeft, bottomLeft)){
-        //     // Debug.Log("left segment intersection " + intersection);
-        //     return true;
-        // // right
-        // } else if (LineSegmentIntersection(out intersection, a1, a2, topRight, bottomRight)){
-        //     // Debug.Log("right intersection");
-        //     return true;
-        // } 
-        // // Debug.Log("NO intersection");
         intersection = new Vector3(x,y,0f);
         return true;
     }
-
 
 
     private float findIntersectionAngle(Vector3 intersection){
@@ -148,7 +82,7 @@ public class Visualization : MonoBehaviour
         return true;
     }
 
-    private float CalculateAngleFromForward(Camera c, GameObject target)
+    private float CalculateLeftRightAngle(Camera c, GameObject target)
     // calculate angle from forward and project down to xz plane
     {
         Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.up);
@@ -157,7 +91,7 @@ public class Visualization : MonoBehaviour
         return projectedAngleFromForward;
     }
     
-    private float CalculateAngleFromUp(Camera c, GameObject target)
+    private float CalculateUpDownAngle(Camera c, GameObject target)
     // calculate angle from forward and project forward to xy plane
     {
         Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.right);
@@ -168,28 +102,24 @@ public class Visualization : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        square = GameObject.Find("Square");
+    {   
+        propsList = new List<GameObject>();
+        props = GameObject.FindObjectOfType<RoomAudioController>();
+        indicatorModel = GameObject.Find("IndicatorModel");
         left = GameObject.Find("Left");
         right = GameObject.Find("Right");
         above = GameObject.Find("Above");
         below = GameObject.Find("Below");
-        rippleCube = GameObject.Find("Cube");
+        cube = GameObject.Find("Cube");
+        cube2 = GameObject.Find("Cube2");
+        propDict.Add(cube,null);
+        propDict.Add(cube2,null);
         center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
         canvas = GameObject.Find("Canvas");
-        Debug.Log("bottomLeft " + bottomLeft);
-        Debug.Log("bottomRight " + bottomRight);
-        Debug.Log("topLeft " + topLeft);
-        Debug.Log("topright " + topRight);
-        // sound = 0;
-        leftTimer = 0;
-        rightTimer = 0;
-        priority = 1;
-
-        leftImage = left.GetComponent<Image>();
-        rightImage = right.GetComponent<Image>();
-        squareImage = square.GetComponent<Image>();
-
+        // leftTimer = 0;
+        // rightTimer = 0;
+        // priority = 1;
+        indicatorModel.SetActive(false);
         left.SetActive(false);
         right.SetActive(false);
         above.SetActive(false);
@@ -199,33 +129,59 @@ public class Visualization : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        angleLeftRight = CalculateAngleFromForward(center, rippleCube);
-        angleUpDown = CalculateAngleFromUp(center, rippleCube);
-        if (angleLeftRight > -60 && angleLeftRight < 60 && angleUpDown > -60 && angleUpDown < 60)
-        {
-            square.SetActive(false);
-        } else
-        {
-            square.SetActive(true);
-            Vector3 intersection;
-            // update indicator
-            if (findPointerCanvasPosition(out intersection, canvas,  rippleCube)){
-                square.transform.localPosition = intersection;
+        foreach (KeyValuePair<GameObject, GameObject> entry in propDict){
+            GameObject prop = entry.Key;
+            GameObject indicator = entry.Value;
+            if (!indicator){
+                indicator = Instantiate(indicatorModel);
+                indicator.transform.parent = canvas.transform;
+                indicator.transform.localScale = new Vector3(1, 1, 1);
+                propDict[prop] = indicator;
+            }
+            Debug.Log("Dictionary entry: " + prop + "," + indicator);
 
-                // scale alpha w/distance
-                float dist = Vector3.Distance(canvas.transform.position, rippleCube.transform.position);
-                float newAlpha = ((Mathf.Abs(angleLeftRight)/360) + Mathf.Abs(angleLeftRight)/360)*.9f;
-                Debug.Log("angleUpDown: " + angleUpDown);
-                Debug.Log("distance: " + dist + "alpha: " + newAlpha);
-                Color newColor = squareImage.color;
-                newColor.a = newAlpha;
-                squareImage.color = newColor;
+            angleLeftRight = CalculateLeftRightAngle(center, prop);
+            angleUpDown = CalculateUpDownAngle(center, prop);
+            bool isVisible = angleLeftRight > -55 && angleLeftRight < 55 && angleUpDown > -45 && angleUpDown < 45;
+            bool isPlaying = prop.GetComponent<AudioSource>().isPlaying;
+            if (isPlaying){
+                if (isVisible)
+                {
+                    indicator.SetActive(false);
+                } else
+                {
+                    indicator.SetActive(true);
+                    Vector3 intersection;
+                    // update indicator
+                    if (findPointerCanvasPosition(out intersection, canvas,  prop)){
+                        indicator.transform.localPosition = intersection;
 
-                // point indicator in direction of sound
-                float intersectionAngle = findIntersectionAngle(intersection);
-                Debug.Log(intersectionAngle + 180);
-                square.transform.eulerAngles = new Vector3(square.transform.eulerAngles.x,square.transform.eulerAngles.y,intersectionAngle+90);
+                        // scale alpha w/distance
+                        float dist = Vector3.Distance(canvas.transform.position, prop.transform.position);
+                        float newAlpha = ((Mathf.Abs(angleLeftRight)/360) + Mathf.Abs(angleLeftRight)/360)*.9f;
+                        // Debug.Log("angleUpDown: " + angleUpDown);
+                        // Debug.Log("distance: " + dist + "alpha: " + newAlpha);
+                        Image indicatorImage = indicator.GetComponent<Image>();
+                        Color newColor = indicatorImage.color;
+                        newColor.a = newAlpha;
+                        indicatorImage.color = newColor;
+
+                        // point indicator in direction of sound
+                        float intersectionAngle = findIntersectionAngle(intersection);
+                        Debug.Log(intersectionAngle + 180);
+                        indicator.transform.eulerAngles = new Vector3(indicator.transform.eulerAngles.x,indicator.transform.eulerAngles.y,intersectionAngle+90);
+                    }
+                }
+            } else {
+                indicator.SetActive(false);
             }
         }
+        // adict = props.PostSoundInformation();
+        // Debug.Log("Prop Dict");
+        // foreach (KeyValuePair<GameObject, bool> kvp in adict)
+        // {
+        //     Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+        // }
+        // Debug.Log("End of Prop Dict");
     }
 }
