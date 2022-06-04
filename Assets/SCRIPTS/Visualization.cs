@@ -176,12 +176,12 @@ public class Visualization : MonoBehaviour
                 indicator.SetActive(false);
             }
         }
-        // adict = props.PostSoundInformation();
-        // Debug.Log("Prop Dict");
-        // foreach (KeyValuePair<GameObject, bool> kvp in adict)
-        // {
-        //     Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
-        // }
-        // Debug.Log("End of Prop Dict");
+        adict = props.PostSoundInformation();
+        Debug.Log("Prop Dict");
+        foreach (KeyValuePair<GameObject, bool> kvp in adict)
+        {
+            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+        }
+        Debug.Log("End of Prop Dict");
     }
 }
