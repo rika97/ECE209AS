@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18116061, g: 0.22255892, b: 0.2831237, a: 1}
+  m_IndirectSpecularColor: {r: 0.18104284, g: 0.22242422, b: 0.28298485, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2971,7 +2971,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8599375735492571419, guid: 8f352fc1555608546b47a1dd0630ba96, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8599375735492571419, guid: 8f352fc1555608546b47a1dd0630ba96, type: 3}
       propertyPath: m_LocalScale.x
@@ -2987,7 +2987,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8599375735492571419, guid: 8f352fc1555608546b47a1dd0630ba96, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.15
+      value: -16.96
       objectReference: {fileID: 0}
     - target: {fileID: 8599375735492571419, guid: 8f352fc1555608546b47a1dd0630ba96, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3448,7 +3448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273926157692253545, guid: 4563cd8ca3d35de49ab2f8b59f8f2f0e, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7273926157692253545, guid: 4563cd8ca3d35de49ab2f8b59f8f2f0e, type: 3}
       propertyPath: m_LocalScale.x
@@ -3464,7 +3464,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7273926157692253545, guid: 4563cd8ca3d35de49ab2f8b59f8f2f0e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.1
+      value: -16.97
       objectReference: {fileID: 0}
     - target: {fileID: 7273926157692253545, guid: 4563cd8ca3d35de49ab2f8b59f8f2f0e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5565,9 +5565,9 @@ Transform:
   - {fileID: 1006388209}
   - {fileID: 1152256653}
   - {fileID: 1021171323}
+  - {fileID: 773859305}
   - {fileID: 948609681}
   - {fileID: 659350546}
-  - {fileID: 773859305}
   m_Father: {fileID: 1667273732}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6635,6 +6635,7 @@ MonoBehaviour:
   clip: {fileID: 8300000, guid: 311ec0e3ddc71474eb5f91f03161f401, type: 3}
   audioSource: {fileID: 0}
   gunBarrelTransform: {fileID: 1449654681}
+  roomAudioController: {fileID: 0}
 --- !u!4 &1398315369
 Transform:
   m_ObjectHideFlags: 0
