@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class SphereViz : MonoBehaviour
 {
+    public float lifespan;
+    public float scale;
     private float timeStart;
-    private float lifespan;
     private Material material;
     private bool fadeIn;
 
@@ -14,7 +15,7 @@ public class SphereViz : MonoBehaviour
     void Start()
     {
         timeStart = Time.time;
-        lifespan = 4;
+        lifespan = lifespan / 2;
         material = gameObject.GetComponent<Renderer>().material;
         fadeIn = true;
 
@@ -31,7 +32,7 @@ public class SphereViz : MonoBehaviour
     public void doUpdate()
     {
         float t = Time.time;
-        gameObject.transform.localScale += (new Vector3(.02f, 0.02f, .02f));
+        gameObject.transform.localScale += (new Vector3(scale, scale, scale));
         float a;
         if (fadeIn)
         {
