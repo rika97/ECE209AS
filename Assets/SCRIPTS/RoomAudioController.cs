@@ -26,7 +26,7 @@ public class RoomAudioController : MonoBehaviour
             objList.Add(obj);
         }
 
-        Assert.IsTrue(nSoundsSelected < nSoundObjects);
+        Assert.IsTrue(nSoundsSelected <= nSoundObjects);
 
         for (int i = 0; i < nSoundsSelected; i++)
         {

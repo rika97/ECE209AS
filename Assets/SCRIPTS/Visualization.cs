@@ -14,7 +14,7 @@ public class Visualization : MonoBehaviour
     public GameObject cube;
     public GameObject cube2;
     public RoomAudioController props;
-    private Dictionary<GameObject, bool> adict;
+    private Dictionary<GameObject, bool> soundDict;
     public Dictionary<GameObject, GameObject> propDict = new Dictionary<GameObject, GameObject>();
     public List<GameObject> propsList;
     public GameObject indicatorModel;
@@ -61,30 +61,15 @@ public class Visualization : MonoBehaviour
 
 
     private float findIntersectionAngle(Vector3 intersection){
+        // calculate angle from up that the intersection 
         Vector3 up = new Vector3(0f,1f,0f);
         float intersectionAngle = Vector3.SignedAngle(up,intersection,new Vector3(0f,0f,1f));
         return intersectionAngle;
     }
 
-    private bool IsVisible(Camera c, GameObject target)
-    // has a margin of 1 so that if object is just outside of FOV ripples still happen
-    {
-        var planes = GeometryUtility.CalculateFrustumPlanes(c);
-        var point = target.transform.position;
-        foreach(var plane in planes)
-        {   
-            //Debug.Log(plane.GetDistanceToPoint(point));
-            if(plane.GetDistanceToPoint(point) < -1)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
     private float CalculateLeftRightAngle(Camera c, GameObject target)
-    // calculate angle from forward and project down to xz plane
     {
+        // calculate angle from forward and project down to xz plane
         Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.up);
         Vector3 to = c.transform.forward;
         float projectedAngleFromForward = Vector3.SignedAngle(from,to,c.transform.up);
@@ -92,8 +77,8 @@ public class Visualization : MonoBehaviour
     }
     
     private float CalculateUpDownAngle(Camera c, GameObject target)
-    // calculate angle from forward and project forward to xy plane
     {
+        // calculate angle from forward and project forward to xy plane
         Vector3 from = Vector3.ProjectOnPlane(target.transform.position - c.transform.position, c.transform.right);
         Vector3 to = c.transform.forward;
         float projectedAngleFromUp = Vector3.SignedAngle(from,to,c.transform.right);
@@ -110,10 +95,6 @@ public class Visualization : MonoBehaviour
         right = GameObject.Find("Right");
         above = GameObject.Find("Above");
         below = GameObject.Find("Below");
-        cube = GameObject.Find("Cube");
-        cube2 = GameObject.Find("Cube2");
-        propDict.Add(cube,null);
-        propDict.Add(cube2,null);
         center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
         canvas = GameObject.Find("Canvas");
         // leftTimer = 0;
@@ -124,11 +105,34 @@ public class Visualization : MonoBehaviour
         right.SetActive(false);
         above.SetActive(false);
         below.SetActive(false);
+
+        // populate PropDict with all objects in soundDict
+        soundDict = props.PostSoundInformation();
+        Debug.Log("soundDict Entries ");
+        foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
+        {
+            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+            propDict.Add(kvp.Key,null);
+        }
+        Debug.Log("PropDict Entries");
+        foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
+        {
+            Debug.Log(kvp.Key + ":"+  kvp.Value);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // 
+        soundDict = props.PostSoundInformation();
+        Debug.Log("Prop Dict");
+        foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
+        {
+            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+        }
+        Debug.Log("End of Prop Dict");
+
         foreach (KeyValuePair<GameObject, GameObject> entry in propDict){
             GameObject prop = entry.Key;
             GameObject indicator = entry.Value;
@@ -138,7 +142,7 @@ public class Visualization : MonoBehaviour
                 indicator.transform.localScale = new Vector3(1, 1, 1);
                 propDict[prop] = indicator;
             }
-            Debug.Log("Dictionary entry: " + prop + "," + indicator);
+            Debug.Log("Dictionary entry: " + prop);
 
             angleLeftRight = CalculateLeftRightAngle(center, prop);
             angleUpDown = CalculateUpDownAngle(center, prop);
@@ -168,20 +172,20 @@ public class Visualization : MonoBehaviour
 
                         // point indicator in direction of sound
                         float intersectionAngle = findIntersectionAngle(intersection);
-                        Debug.Log(intersectionAngle + 180);
+                        // Debug.Log(intersectionAngle + 180);
                         indicator.transform.eulerAngles = new Vector3(indicator.transform.eulerAngles.x,indicator.transform.eulerAngles.y,intersectionAngle+90);
+
+                        // scale indicator with volume
+                        float volume = prop.GetComponent<SoundVolumeGrabber>().postLoudness();
+                        Debug.Log("volume: " + volume);
+                        indicator.transform.localScale = new Vector3(2*volume, 2*volume, 1);
+
                     }
                 }
             } else {
                 indicator.SetActive(false);
             }
         }
-        adict = props.PostSoundInformation();
-        Debug.Log("Prop Dict");
-        foreach (KeyValuePair<GameObject, bool> kvp in adict)
-        {
-            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
-        }
-        Debug.Log("End of Prop Dict");
+
     }
 }
