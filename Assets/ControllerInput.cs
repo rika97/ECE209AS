@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +10,12 @@ public class ControllerInput : MonoBehaviour
     public AudioSource audioSource;
 
     public Transform gunBarrelTransform;
+    public RoomAudioController roomAudioController;
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         audioSource.clip = clip;
+        roomAudioController = GameObject.FindObjectOfType<RoomAudioController>();
     }
 
     // Update is called once per frame
@@ -28,11 +31,26 @@ public class ControllerInput : MonoBehaviour
     private void RaycastGun()
     {
       RaycastHit hit;
+      Dictionary<GameObject, bool> adict = roomAudioController.PostSoundInformation();
       if (Physics.Raycast(gunBarrelTransform.position, gunBarrelTransform.forward, out hit))
       {
-        if (hit.collider.gameObject.CompareTag("HitTarget"))
+        GameObject targetObject = hit.collider.gameObject;
+        if (targetObject.CompareTag("wSound"))
         {
-          Destroy(hit.collider.gameObject);
+          // Destroy(hit.collider.gameObject);
+          // hit.collider.gameObject.GetComponent<AudioSource>().Play(0);
+          if (!targetObject.GetComponent<AudioSource>().isPlaying)
+          {
+            targetObject.GetComponent<AudioSource>().Play(0);
+            adict[targetObject] = true;
+
+          }
+          else
+          {
+            targetObject.GetComponent<AudioSource>().Stop();
+            adict[targetObject] = false;
+          }
+
         }
       }
     }
