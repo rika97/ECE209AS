@@ -24,16 +24,9 @@ public class RoomAudioController : MonoBehaviour
         foreach (GameObject obj in myObjectArray)
         {
             objList.Add(obj);
-
-            //Start playing audio for each object at random timing
-            int vIn = 44100*Random.Range(3, 20);
-            ulong vOut = System.Convert.ToUInt64(vIn);
-            var audioScript = obj.GetComponent<AudioSource>();
-            audioScript.Play(vOut);
         }
 
-        Assert.IsTrue(nSoundsSelected < nSoundObjects);
-
+        Assert.IsTrue(nSoundsSelected <= nSoundObjects);
 
         for (int i = 0; i < nSoundsSelected; i++)
         {
@@ -43,10 +36,11 @@ public class RoomAudioController : MonoBehaviour
             Debug.Log("selected : " + selectedObject.name);
             objList.Remove(selectedObject);
 
-            // Call loop method inside objects wSound ----
+            // Call loop method inside objects wSound ---- 
             var myAudioScript = selectedObject.GetComponent<ObjectAudioController>();
             myAudioScript.changeLoopPeriod(Random.Range(0, 20));
-            myAudioScript.toggleLoop(false);
+            myAudioScript.toggleLoop(true);
+
 
             if (adict.ContainsKey(selectedObject))
             {

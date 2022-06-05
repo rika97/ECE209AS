@@ -37,13 +37,12 @@ public class ControllerInput : MonoBehaviour
         GameObject targetObject = hit.collider.gameObject;
         if (targetObject.CompareTag("wSound"))
         {
-          // Destroy(hit.collider.gameObject);
-          // hit.collider.gameObject.GetComponent<AudioSource>().Play(0);
           if (targetObject.GetComponent<AudioSource>().isPlaying)
           {
-            targetObject.GetComponent<AudioSource>().Play(0);
-            adict[targetObject] = true;
-
+            targetObject.GetComponent<AudioSource>().Stop();
+            adict[targetObject] = false;
+            var myAudioScript = targetObject.GetComponent<ObjectAudioController>();
+            myAudioScript.toggleLoop(false);
           }
 
         }
