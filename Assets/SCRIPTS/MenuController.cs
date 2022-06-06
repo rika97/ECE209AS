@@ -79,12 +79,14 @@ public class MenuController : MonoBehaviour
         if (GUILayout.Button("Level1", GUILayout.Width(300), GUILayout.Height(20)))
         {
             int aNumber = Random.Range(1, 2);
+            aNumber = 1;
             Debug.LogWarning("starting experience w " + aNumber + " sounds");
             StartExperience(aNumber, VizToggle, SoundToggle);
         }
         if (GUILayout.Button("Level2", GUILayout.Width(300), GUILayout.Height(20)))
         {
             int aNumber = Random.Range(2, 4);
+            aNumber = 2;
             Debug.LogWarning("starting experience w " + aNumber + " sounds");
             StartExperience(aNumber, VizToggle, SoundToggle);
         }

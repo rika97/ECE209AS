@@ -96,7 +96,7 @@ public class RoomAudioController : MonoBehaviour
         foreach (KeyValuePair<GameObject, bool> kvp in adict)
         {
             //kvp.Key.GetComponent<RippleViz>().BeginRipple();
-            kvp.Key.GetComponent<RippleViz>().rippleOn = true;
+            kvp.Key.GetComponent<RippleViz>().enabled = true;
         }
     }
 
@@ -105,7 +105,7 @@ public class RoomAudioController : MonoBehaviour
         foreach (KeyValuePair<GameObject, bool> kvp in adict)
         {
             //kvp.Key.GetComponent<RippleViz>().StopRipple();
-            kvp.Key.GetComponent<RippleViz>().rippleOn = false;
+            kvp.Key.GetComponent<RippleViz>().enabled = false;
         }
     }
 
