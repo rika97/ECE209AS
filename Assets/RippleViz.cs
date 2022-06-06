@@ -42,6 +42,7 @@ public class RippleViz : MonoBehaviour
             showRings = false;
             showSpheres = true;
         }
+        Debug.Log("showSpheres: " + showSpheres);
 
     }
 
@@ -148,7 +149,9 @@ public class RippleViz : MonoBehaviour
         GameObject newSphere = Instantiate(sphereModel);
         newSphere.transform.position = new Vector3(pos.x, pos.y, pos.z);
         newSphere.transform.localScale = new Vector3(scale, scale, scale);
+        Debug.Log("1");
         newSphere.GetComponent<SphereViz>().lifespan = lifespan;
+        Debug.Log("2");
         newSphere.GetComponent<SphereViz>().scale = .02f / (.3f / volume);
         return newSphere;
     }

@@ -45,7 +45,7 @@ public class SoundVolumeGrabber : MonoBehaviour
 
     public float postLoudness()
     {
-        Debug.Log("loudness " + audioSource.clip.ToString() +": "+ clipLoudness);
+        // Debug.Log("loudness " + audioSource.clip.ToString() +": "+ clipLoudness);
 
         return clipLoudness;
     }

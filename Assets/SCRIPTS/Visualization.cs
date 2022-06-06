@@ -107,17 +107,17 @@ public class Visualization : MonoBehaviour
 
         // populate PropDict with all objects in soundDict
         soundDict = props.PostSoundInformation();
-        Debug.Log("soundDict Entries ");
+        // Debug.Log("soundDict Entries ");
         foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
         {
-            Debug.Log(string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(), kvp.Key.transform.position));
+            // Debug.Log(string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(), kvp.Key.transform.position));
             propDict.Add(kvp.Key, null);
         }
-        Debug.Log("PropDict Entries");
-        foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
-        {
-            Debug.Log(kvp.Key + ":" + kvp.Value);
-        }
+        // Debug.Log("PropDict Entries");
+        // foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
+        // {
+        //     Debug.Log(kvp.Key + ":" + kvp.Value);
+        // }
     }
 
     // Start is called before the first frame update
@@ -161,12 +161,12 @@ public class Visualization : MonoBehaviour
     {
         // 
         soundDict = props.PostSoundInformation();
-        Debug.Log("Prop Dict");
-        foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
-        {
-            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
-        }
-        Debug.Log("End of Prop Dict");
+        // Debug.Log("Prop Dict");
+        // foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
+        // {
+        //     Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+        // }
+        // Debug.Log("End of Prop Dict");
 
         foreach (KeyValuePair<GameObject, GameObject> entry in propDict){
             GameObject prop = entry.Key;
@@ -177,7 +177,7 @@ public class Visualization : MonoBehaviour
                 indicator.transform.localScale = new Vector3(1, 1, 1);
                 propDict[prop] = indicator;
             }
-            Debug.Log("Dictionary entry: " + prop);
+            // Debug.Log("Dictionary entry: " + prop);
 
             angleLeftRight = CalculateLeftRightAngle(center, prop);
             angleUpDown = CalculateUpDownAngle(center, prop);
@@ -212,7 +212,7 @@ public class Visualization : MonoBehaviour
 
                         // scale indicator with volume
                         float volume = prop.GetComponent<SoundVolumeGrabber>().postLoudness();
-                        Debug.Log("volume: " + volume);
+                        // Debug.Log("volume: " + volume);
                         indicator.transform.localScale = new Vector3(2*volume, 2*volume, 1);
 
                     }

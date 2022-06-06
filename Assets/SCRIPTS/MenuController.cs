@@ -17,6 +17,7 @@ public class MenuController : MonoBehaviour
         SceneAudioParent = GameObject.FindGameObjectWithTag("SoundsParent");
         HeadVisualization = GameObject.FindGameObjectWithTag("HeadViz");
         LPF = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioLowPassFilter>();
+        StartExperience(5, true, true);
     }
 
     public void NoViz()
