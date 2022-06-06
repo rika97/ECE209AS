@@ -12,7 +12,7 @@ public class RippleViz : MonoBehaviour
     private GameObject sphereModel;
     private float rippleTime;
     private float sphereTime;
-    private bool rippleOn;
+    public bool rippleOn;
     private int activeRings = 0;
     private int activeSpheres = 0;
     private Queue<GameObject> rings = new Queue<GameObject>();
@@ -47,6 +47,7 @@ public class RippleViz : MonoBehaviour
                 float t = Time.time;
                 if (showRings)
                 {
+                    //Debug.LogWarning("showing rings now--- in " + gameObject.name);
                     if (t - rippleTime > 1)
                     {
                         //int nRings = Convert.ToInt32(Math.Floor(Mathf.Min(volume, .99f) / 0.2)) + 1;
@@ -100,7 +101,7 @@ public class RippleViz : MonoBehaviour
         }
     }
 
-    void BeginRipple()
+    public void BeginRipple()
     {
         rippleOn = true;
         //GameObject newRing = CreateRing();
@@ -113,7 +114,7 @@ public class RippleViz : MonoBehaviour
         //activeSpheres = 1;
     }
 
-    void StopRipple()
+    public void StopRipple()
     {
         rippleOn = false;
         foreach (GameObject ring in rings)

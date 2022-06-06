@@ -5,21 +5,47 @@ using UnityEngine.Assertions;
 
 public class RoomAudioController : MonoBehaviour
 {
-    [SerializeField] private int nSoundsSelected;
-
+    public int nSoundsSelected;
     private static Dictionary<GameObject, bool> adict;
 
     // Start is called before the first frame update
     void Start()
     {
+        //adict                    = new Dictionary<GameObject, bool>();
+        //List<GameObject> objList = new List<GameObject>();
+        //var myObjectArray        = GameObject.FindGameObjectsWithTag("wSound");
+        //int nSoundObjects        = myObjectArray.Length;
+
+        //foreach (GameObject obj in myObjectArray)
+        //{
+        //    objList.Add(obj);
+        //}
+
+        //Assert.IsTrue(nSoundsSelected <= nSoundObjects);
+
+        //for (int i = 0; i < nSoundsSelected; i++)
+        //{
+        //    // select random sound + remove to avoid duplicate
+        //    int rand_number = Random.Range(0, nSoundObjects - i);
+        //    GameObject selectedObject = objList[rand_number];
+        //    Debug.Log("selected : " + selectedObject.name);
+        //    adict.Add(selectedObject, selectedObject.GetComponent<AudioSource>().isPlaying);
+        //    objList.Remove(selectedObject);
+
+        //    // delay launch audio clips ----
+        //    float rand_delay = Random.Range(3.0f, 7.0f);
+        //    Debug.LogWarning("launching " + selectedObject.name + " in " + rand_delay.ToString()+" s.");
+        //    selectedObject.GetComponent<ObjectAudioController>().StartWDelay(rand_delay);
+        //}
+
+    }
+
+    private void OnEnable()
+    {
         adict = new Dictionary<GameObject, bool>();
-
         List<GameObject> objList = new List<GameObject>();
-
         var myObjectArray = GameObject.FindGameObjectsWithTag("wSound");
         int nSoundObjects = myObjectArray.Length;
-
-        Debug.Log("found " + nSoundObjects + " wSound objects!");
 
         foreach (GameObject obj in myObjectArray)
         {
@@ -34,23 +60,13 @@ public class RoomAudioController : MonoBehaviour
             int rand_number = Random.Range(0, nSoundObjects - i);
             GameObject selectedObject = objList[rand_number];
             Debug.Log("selected : " + selectedObject.name);
+            adict.Add(selectedObject, selectedObject.GetComponent<AudioSource>().isPlaying);
             objList.Remove(selectedObject);
 
-            // Call loop method inside objects wSound ---- 
-            var myAudioScript = selectedObject.GetComponent<ObjectAudioController>();
-            myAudioScript.changeLoopPeriod(Random.Range(0, 20));
-            myAudioScript.toggleLoop(true);
-
-
-            if (adict.ContainsKey(selectedObject))
-            {
-                adict[selectedObject] = selectedObject.GetComponent<AudioSource>().isPlaying;
-            }
-            else
-            {
-                adict.Add(selectedObject, selectedObject.GetComponent<AudioSource>().isPlaying);
-            }
-
+            // delay launch audio clips ----
+            float rand_delay = Random.Range(3.0f, 7.0f);
+            Debug.LogWarning("launching " + selectedObject.name + " in " + rand_delay.ToString() + " s.");
+            selectedObject.GetComponent<ObjectAudioController>().StartWDelay(rand_delay);
         }
 
     }
@@ -72,20 +88,52 @@ public class RoomAudioController : MonoBehaviour
 
     public Dictionary<GameObject, bool> PostSoundInformation()
     {
-        foreach (KeyValuePair<GameObject, bool> kvp in adict)
-        {
-            Debug.Log("in dict print");
-            Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
-        }
         return adict;
     }
 
-
-    void OnGUI()
+    public void EnableViz()
     {
-        if (GUILayout.Button("PostSoundInformation"))
+        foreach (KeyValuePair<GameObject, bool> kvp in adict)
         {
-            PostSoundInformation();
+            //kvp.Key.GetComponent<RippleViz>().BeginRipple();
+            kvp.Key.GetComponent<RippleViz>().rippleOn = true;
         }
     }
+
+    public void DisableViz()
+    {
+        foreach (KeyValuePair<GameObject, bool> kvp in adict)
+        {
+            //kvp.Key.GetComponent<RippleViz>().StopRipple();
+            kvp.Key.GetComponent<RippleViz>().rippleOn = false;
+        }
+    }
+
+    public void StopSounds()
+    {
+        foreach (KeyValuePair<GameObject, bool> kvp in adict)
+        {
+            kvp.Key.GetComponent<AudioSource>().Stop();
+        }
+    }
+
+
+    //void OnGUI()
+    //{
+    //    //if (GUILayout.Button("Start sounds", GUILayout.Width(300), GUILayout.Height(20)))
+    //    //{
+
+    //    //}
+    //    if (GUILayout.Button("Timer objs", GUILayout.Width(300), GUILayout.Height(20)))
+    //    {
+    //        foreach (KeyValuePair<GameObject, bool> kvp in adict)
+    //        {
+    //            Debug.LogWarning(string.Format("SoundObject = {0}, TimerElapsed? = {1}", kvp.Key.name, kvp.Key.GetComponent<ObjectAudioController>().timer.Elapsed )) ;
+    //        }
+    //    }
+    //    if (GUILayout.Button("Restart", GUILayout.Width(300), GUILayout.Height(20)))
+    //    {
+
+    //    }
+    //}
 }

@@ -1,49 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Diagnostics;
 
 public class ObjectAudioController : MonoBehaviour
 {
     private float playEverySeconds = 5;
     private float timePassed = 0;
-
     private bool toggle = false;
-
-    // [SerializeField] private AudioSource myAudioSource;
     private AudioSource myAudioSource;
+
+    public Stopwatch timer;
 
     // Start is called before the first frame update
     void Start()
     {
         myAudioSource = this.GetComponent<AudioSource>();
+        timer = new Stopwatch();
     }
 
     // Update is called once per frame
     void Update()
     {
-        timePassed += Time.deltaTime;
-        if (timePassed >= playEverySeconds && toggle)
-        {
-            timePassed = 0;
-            myAudioSource.Play();
-        }
+        //timePassed += Time.deltaTime;
+        //if (timePassed >= playEverySeconds && toggle)
+        //{
+        //    timePassed = 0;
+        //    myAudioSource.Play();
+        //}
     }
 
-    public void toggleLoop(bool on)
+    public void StartWDelay(float delayTime)
     {
-        if (on)
-        {
-            myAudioSource.Play();
-            toggle = true;
-        }
-        else
-        {
-            toggle = false;
-        }
+        StartCoroutine(DelayAction(delayTime));
     }
 
-    public void changeLoopPeriod(int period)
+    IEnumerator DelayAction(float delayTime)
     {
-        playEverySeconds = period;
+        yield return new WaitForSeconds(delayTime);
+        myAudioSource.Play();
+        timer.Start();
     }
+
+
+    //float PostTimer()
+    //{
+    //    return timer.Elapsed;
+    //}
 }

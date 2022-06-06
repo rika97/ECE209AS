@@ -50,12 +50,12 @@ public class SoundVolumeGrabber : MonoBehaviour
         return clipLoudness;
     }
 
-    void OnGUI()
-    {
-        //if (GUILayout.Button("postLoudness"))
-            if (GUI.Button(new Rect(0, 20, 100, 30), "postLoudness"))
-            {
-            postLoudness();
-        }
-    }
+    //void OnGUI()
+    //{
+    //    //if (GUILayout.Button("postLoudness"))
+    //        if (GUI.Button(new Rect(0, 20, 100, 30), "postLoudness"))
+    //        {
+    //        postLoudness();
+    //    }
+    //}
 }
