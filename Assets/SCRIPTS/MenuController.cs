@@ -21,28 +21,39 @@ public class MenuController : MonoBehaviour
 
     public void NoViz()
     {
-
+        VizToggle = false;
+        SoundToggle = true;
     }
     public void SoundAndViz()
     {
-
+        VizToggle = true;
+        SoundToggle = true;
     }
     public void VizOnly()
     {
-
+        VizToggle = true;
+        SoundToggle = false;
     }
     public void L1()
     {
-
+        int aNumber = Random.Range(1, 2);
+        StartExperience(aNumber, VizToggle, SoundToggle);
     }
     public void L2()
     {
-
+        int aNumber = Random.Range(2, 4);
+        StartExperience(aNumber, VizToggle, SoundToggle);
     }
 
     public void L3()
     {
+        int aNumber = Random.Range(4, 6);
+        StartExperience(aNumber, VizToggle, SoundToggle);
+    }
 
+    public void Exit()
+    {
+        StopAudio();
     }
 
 
