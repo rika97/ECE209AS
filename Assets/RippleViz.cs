@@ -36,6 +36,7 @@ public class RippleViz : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        print(audioSource.isPlaying);
         if (rippleOn)
         {
             if (!audioSource.isPlaying)
