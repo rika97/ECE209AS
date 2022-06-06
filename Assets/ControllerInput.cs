@@ -23,28 +23,28 @@ public class ControllerInput : MonoBehaviour
     {
         if (OVRInput.Get(OVRInput.Button.SecondaryIndexTrigger))
         {
-          audioSource.Play();
-          RaycastGun();
+            audioSource.Play();
+            RaycastGun();
         }
     }
 
     private void RaycastGun()
     {
-      RaycastHit hit;
-      Dictionary<GameObject, bool> adict = roomAudioController.PostSoundInformation();
-      if (Physics.Raycast(gunBarrelTransform.position, gunBarrelTransform.forward, out hit))
-      {
-        GameObject targetObject = hit.collider.gameObject;
-        if (targetObject.CompareTag("wSound"))
+        RaycastHit hit;
+        Dictionary<GameObject, bool> adict = roomAudioController.PostSoundInformation();
+        if (Physics.Raycast(gunBarrelTransform.position, gunBarrelTransform.forward, out hit))
         {
-          if (targetObject.GetComponent<AudioSource>().isPlaying)
-          {
-            System.TimeSpan x = targetObject.GetComponent<ObjectAudioController>().timer.Elapsed;
-            Debug.LogWarning("HitObject - timerElapsed: "+x.ToString());
-            targetObject.GetComponent<AudioSource>().Stop();
-            //adict[targetObject] = true;
-          }
+            GameObject targetObject = hit.collider.gameObject;
+            if (targetObject.CompareTag("wSound"))
+            {
+                if (targetObject.GetComponent<AudioSource>().isPlaying)
+                {
+                    System.TimeSpan x = targetObject.GetComponent<ObjectAudioController>().timer.Elapsed;
+                    Debug.LogWarning("HitObject - timerElapsed: " + x.ToString());
+                    targetObject.GetComponent<AudioSource>().Stop();
+                    //adict[targetObject] = true;
+                }
+            }
         }
-      }
     }
 }
