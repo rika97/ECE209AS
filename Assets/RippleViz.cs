@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class RippleViz : MonoBehaviour
 {
+    public float scaleValue = 0.2f;
     private bool showRings;
     private bool showSpheres;
     private GameObject ringModel;
@@ -40,14 +41,13 @@ public class RippleViz : MonoBehaviour
             if (renderers.Length == 1)
             {
                 bounds = renderers[0].bounds;
-                print(bounds.size);
 
             } else
             {
                 bounds = CalcMultiBounds(renderers);
             }
         }
-        ringScale = (new float[] { bounds.size.x, bounds.size.z }).Min() * .5f;
+        ringScale = (new float[] { bounds.size.x, bounds.size.z }).Min() * .8f;
         sphereScale = (new float[] { bounds.size.x, bounds.size.y, bounds.size.z }).Max() * 1.5f;
         
         audioSource = gameObject.GetComponent<AudioSource>();
@@ -159,7 +159,7 @@ public class RippleViz : MonoBehaviour
         newRing.transform.position = new Vector3(pos.x, 0.11f, pos.z);
         newRing.transform.localScale = new Vector3(ringScale, ringScale, ringScale);
         newRing.GetComponent<RingViz>().lifespan = lifespan;
-        newRing.GetComponent<RingViz>().scale = Mathf.Max(.02f / (.3f / volume), .005f);
+        newRing.GetComponent<RingViz>().scale = Mathf.Max(scaleValue / (.3f / volume), .005f);
         return newRing;
     }
 
@@ -173,7 +173,7 @@ public class RippleViz : MonoBehaviour
         Debug.Log("1");
         newSphere.GetComponent<SphereViz>().lifespan = lifespan;
         Debug.Log("2");
-        newSphere.GetComponent<SphereViz>().scale = Mathf.Max(.02f / (.3f / volume), .005f);
+        newSphere.GetComponent<SphereViz>().scale = Mathf.Max(scaleValue / (.3f / volume), .005f);
         return newSphere;
     }
 
