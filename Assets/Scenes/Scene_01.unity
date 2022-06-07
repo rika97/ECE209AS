@@ -1517,6 +1517,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!1 &289251976
 GameObject:
@@ -1664,7 +1667,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299881433}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b28a4e55f86f6f47a9c88576bd00605, type: 3}
   m_Name: 
@@ -2621,6 +2624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!114 &555442037
 MonoBehaviour:
@@ -6202,6 +6208,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!1 &1088968653
 GameObject:
@@ -6561,6 +6570,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!1 &1127985068
 GameObject:
@@ -7519,6 +7531,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!82 &1256738060
 AudioSource:
@@ -10416,6 +10431,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!1 &1728139513
 GameObject:
@@ -10639,6 +10657,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e711c5ef6830cb940b722ebb0f4e56c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  growRate: 0.2
+  ringStartingScale: 0.8
+  sphereStartingScale: 1.5
   rippleOn: 0
 --- !u!1 &1730400827
 GameObject:
@@ -11178,7 +11199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1888115527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11764,6 +11785,55 @@ Transform:
   - {fileID: 1286085881}
   m_Father: {fileID: 1778973463}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1981287430
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1981287432}
+  - component: {fileID: 1981287431}
+  m_Layer: 0
+  m_Name: DemoLoop
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1981287431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981287430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e310fa17dccba41d99813308c311a7e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SceneAudioParent: {fileID: 0}
+  HeadVisualization: {fileID: 0}
+  LPF: {fileID: 0}
+  timeRemaining: 5
+  timerIsRunning: 1
+--- !u!4 &1981287432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981287430}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.1965578, y: 0.5171441, z: -1.5041437}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2005258390
 GameObject:

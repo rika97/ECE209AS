@@ -11,32 +11,6 @@ public class RoomAudioController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //adict                    = new Dictionary<GameObject, bool>();
-        //List<GameObject> objList = new List<GameObject>();
-        //var myObjectArray        = GameObject.FindGameObjectsWithTag("wSound");
-        //int nSoundObjects        = myObjectArray.Length;
-
-        //foreach (GameObject obj in myObjectArray)
-        //{
-        //    objList.Add(obj);
-        //}
-
-        //Assert.IsTrue(nSoundsSelected <= nSoundObjects);
-
-        //for (int i = 0; i < nSoundsSelected; i++)
-        //{
-        //    // select random sound + remove to avoid duplicate
-        //    int rand_number = Random.Range(0, nSoundObjects - i);
-        //    GameObject selectedObject = objList[rand_number];
-        //    Debug.Log("selected : " + selectedObject.name);
-        //    adict.Add(selectedObject, selectedObject.GetComponent<AudioSource>().isPlaying);
-        //    objList.Remove(selectedObject);
-
-        //    // delay launch audio clips ----
-        //    float rand_delay = Random.Range(3.0f, 7.0f);
-        //    Debug.LogWarning("launching " + selectedObject.name + " in " + rand_delay.ToString()+" s.");
-        //    selectedObject.GetComponent<ObjectAudioController>().StartWDelay(rand_delay);
-        //}
 
     }
 
