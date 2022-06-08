@@ -67,67 +67,69 @@ public class DemoLoop : MonoBehaviour
         SceneAudioParent = GameObject.FindGameObjectWithTag("SoundsParent");
         HeadVisualization = GameObject.FindGameObjectWithTag("HeadViz");
         LPF = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<AudioLowPassFilter>();
+        StartExperience(3, true);
     }
     void Update()
     {
-        if (timerIsRunning)
-        {
-            if (timeRemaining > 0)
-            {
-                timeRemaining -= Time.deltaTime;
-            }
-            else
-            {
-                Debug.Log("Time has run out!");
-                if (SceneAudioParent.GetComponent<RoomAudioController>().enabled == false)
-                {
-                    int aNumber = Random.Range(1, 2);
-                    float rand = Random.value;
-                    if (rand <= .66f)
-                    {
-                        // soundOn
-                        StartExperience(aNumber, true);
-                    }
-                    else
-                    {
-                        //soundOff
-                        StartExperience(aNumber, false);
-                    }
-                    return;
-                }
-                timeRemaining = 30;
-                //timerIsRunning = false;
+        // if (timerIsRunning)
+        // {
+        //     if (timeRemaining > 0)
+        //     {
+        //         timeRemaining -= Time.deltaTime;
+        //     }
+        //     else
+        //     {
+        //         Debug.Log("Time has run out!");
+        //         if (SceneAudioParent.GetComponent<RoomAudioController>().enabled == false)
+        //         {
+        //             int aNumber = Random.Range(1, 2);
+        //             float rand = Random.value;
+        //             if (rand <= .66f)
+        //             {
+        //                 // soundOn
+        //                 StartExperience(aNumber, true);
+        //             }
+        //             else
+        //             {
+        //                 //soundOff
+        //                 StartExperience(aNumber, false);
+        //             }
+        //             return;
+        //         }
+        //         timeRemaining = 30;
+        //         //timerIsRunning = false;
 
-                Dictionary<GameObject, bool> aDict = SceneAudioParent.GetComponent<RoomAudioController>().PostSoundInformation();
-                bool audioActive = false;
-                foreach (bool soundsOn in aDict.Values)
-                {
-                    if (soundsOn == true) { audioActive = true; break; }
-                }
-                if (!audioActive)
-                {
-                    // launch
-                    int aNumber = Random.Range(1, 4);
-                    float rand = Random.value;
-                    if (rand <= .66f)
-                    {
-                        // soundOn
-                        StartExperience(aNumber, true);
-                    }
-                    else
-                    {
-                        //soundOff
-                        StartExperience(aNumber, false);
-                    }
-                }
-            }
-        }
+        //         Dictionary<GameObject, bool> aDict = SceneAudioParent.GetComponent<RoomAudioController>().PostSoundInformation();
+        //         bool audioActive = false;
+        //         foreach (bool soundsOn in aDict.Values)
+        //         {
+        //             if (soundsOn == true) { audioActive = true; break; }
+        //         }
+        //         if (!audioActive)
+        //         {
+        //             // launch
+        //             int aNumber = Random.Range(1, 4);
+        //             float rand = Random.value;
+        //             if (rand <= .66f)
+        //             {
+        //                 // soundOn
+        //                 StartExperience(aNumber, true);
+        //             }
+        //             else
+        //             {
+        //                 //soundOff
+        //                 StartExperience(aNumber, false);
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     void StartExperience(int nSounds, bool wSound)
     {
         LPF.enabled = !wSound;
         SceneAudioParent.GetComponent<RoomAudioController>().nSoundsSelected = nSounds;
+        // Debug.Log("nSounds:" + nSounds);
         SceneAudioParent.GetComponent<RoomAudioController>().enabled = true;
     }
 

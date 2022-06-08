@@ -85,8 +85,44 @@ public class Visualization : MonoBehaviour
         return projectedAngleFromUp;
     }
 
-    private void OnEnable()
-    {
+    // private void OnEnable()
+    // {
+    //     propsList = new List<GameObject>();
+    //     props = GameObject.FindObjectOfType<RoomAudioController>();
+    //     indicatorModel = GameObject.Find("IndicatorModel");
+    //     left = GameObject.Find("Left");
+    //     right = GameObject.Find("Right");
+    //     above = GameObject.Find("Above");
+    //     below = GameObject.Find("Below");
+    //     center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
+    //     canvas = GameObject.Find("Canvas");
+    //     // leftTimer = 0;
+    //     // rightTimer = 0;
+    //     // priority = 1;
+    //     indicatorModel.SetActive(false);
+    //     left.SetActive(false);
+    //     right.SetActive(false);
+    //     above.SetActive(false);
+    //     below.SetActive(false);
+
+    //     // populate PropDict with all objects in soundDict
+    //     soundDict = props.PostSoundInformation();
+    //     // Debug.Log("soundDict Entries ");
+    //     foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
+    //     {
+    //         // Debug.Log(string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(), kvp.Key.transform.position));
+    //         propDict.Add(kvp.Key, null);
+    //     }
+    //     // Debug.Log("PropDict Entries");
+    //     // foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
+    //     // {
+    //     //     Debug.Log(kvp.Key + ":" + kvp.Value);
+    //     // }
+    // }
+
+    // Start is called before the first frame update
+    void Start()
+    {   
         propsList = new List<GameObject>();
         props = GameObject.FindObjectOfType<RoomAudioController>();
         indicatorModel = GameObject.Find("IndicatorModel");
@@ -107,53 +143,17 @@ public class Visualization : MonoBehaviour
 
         // populate PropDict with all objects in soundDict
         soundDict = props.PostSoundInformation();
-        // Debug.Log("soundDict Entries ");
+        Debug.Log("soundDict Entries ");
         foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
         {
-            // Debug.Log(string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(), kvp.Key.transform.position));
-            propDict.Add(kvp.Key, null);
+           Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
+           propDict.Add(kvp.Key,null);
         }
-        // Debug.Log("PropDict Entries");
-        // foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
-        // {
-        //     Debug.Log(kvp.Key + ":" + kvp.Value);
-        // }
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {   
-        //propsList = new List<GameObject>();
-        //props = GameObject.FindObjectOfType<RoomAudioController>();
-        //indicatorModel = GameObject.Find("IndicatorModel");
-        //left = GameObject.Find("Left");
-        //right = GameObject.Find("Right");
-        //above = GameObject.Find("Above");
-        //below = GameObject.Find("Below");
-        //center = GameObject.Find("CenterEyeAnchor").GetComponent<Camera>();
-        //canvas = GameObject.Find("Canvas");
-        //// leftTimer = 0;
-        //// rightTimer = 0;
-        //// priority = 1;
-        //indicatorModel.SetActive(false);
-        //left.SetActive(false);
-        //right.SetActive(false);
-        //above.SetActive(false);
-        //below.SetActive(false);
-
-        //// populate PropDict with all objects in soundDict
-        //soundDict = props.PostSoundInformation();
-        //Debug.Log("soundDict Entries ");
-        //foreach (KeyValuePair<GameObject, bool> kvp in soundDict)
-        //{
-        //    Debug.Log( string.Format("SoundObject = {0}, SoundOn? = {1}, Volume = {2}, Location = {3}", kvp.Key, kvp.Value, kvp.Key.GetComponent<SoundVolumeGrabber>().postLoudness().ToString(),kvp.Key.transform.position));
-        //    propDict.Add(kvp.Key,null);
-        //}
-        //Debug.Log("PropDict Entries");
-        //foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
-        //{
-        //    Debug.Log(kvp.Key + ":"+  kvp.Value);
-        //}
+        Debug.Log("PropDict Entries");
+        foreach (KeyValuePair<GameObject, GameObject> kvp in propDict)
+        {
+           Debug.Log(kvp.Key + ":"+  kvp.Value);
+        }
     }
 
     // Update is called once per frame

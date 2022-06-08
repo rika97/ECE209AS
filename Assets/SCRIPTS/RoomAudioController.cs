@@ -27,19 +27,19 @@ public class RoomAudioController : MonoBehaviour
         }
 
         Assert.IsTrue(nSoundsSelected <= nSoundObjects);
-
+        // Debug.Log("nSoundsSelected: " + nSoundsSelected);
         for (int i = 0; i < nSoundsSelected; i++)
         {
             // select random sound + remove to avoid duplicate
             int rand_number = Random.Range(0, nSoundObjects - i);
             GameObject selectedObject = objList[rand_number];
-            Debug.Log("selected : " + selectedObject.name);
+            Debug.Log("selected : " + i + ":"+ selectedObject.name);
             adict.Add(selectedObject, selectedObject.GetComponent<AudioSource>().isPlaying);
             objList.Remove(selectedObject);
 
             // delay launch audio clips ----
             float rand_delay = Random.Range(3.0f, 7.0f);
-            Debug.LogWarning("launching " + selectedObject.name + " in " + rand_delay.ToString() + " s.");
+            // Debug.LogWarning("launching " + selectedObject.name + " in " + rand_delay.ToString() + " s.");
             selectedObject.GetComponent<ObjectAudioController>().StartWDelay(rand_delay);
         }
 
